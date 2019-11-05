@@ -40,7 +40,7 @@ def compute_homo(img1, img2):
 
 
 def compute_mse(H, H_four_points):
-    four_points = np.float32([[0, 0], [0, 128], [128, 128], [128, 0]])
+    four_points = np.float32([[32, 32], [160, 32], [160, 160], [32, 160]])
     four_points = np.array([four_points])
     print(four_points.shape)
     # print(H)
