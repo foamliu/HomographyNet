@@ -29,8 +29,6 @@ class DeepHNDataset(Dataset):
     def __getitem__(self, i):
         sample = self.samples[i]
         image, H_four_points = sample
-        image = transforms.ToPILImage()(image)
-        image = self.transformer(image)
         target = np.reshape(H_four_points, (8,))
         return image, target
 
