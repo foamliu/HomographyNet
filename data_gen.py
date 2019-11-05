@@ -36,7 +36,7 @@ class DeepHNDataset(Dataset):
         sample = self.samples[i]
         image, H_four_points = sample
         print(image.shape)
-        print(H_four_points)
+        print(H_four_points.shape)
         return image
 
     def __len__(self):
