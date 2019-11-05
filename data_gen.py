@@ -24,7 +24,7 @@ data_transforms = {
 
 class DeepHNDataset(Dataset):
     def __init__(self, split):
-        filename = '{}.pkl'.format(split)
+        filename = 'data/{}.pkl'.format(split)
         with open(filename, 'rb') as file:
             samples = pickle.load(file)
 
