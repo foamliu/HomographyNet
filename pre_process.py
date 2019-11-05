@@ -26,9 +26,10 @@ def process(files):
             perturbed_four_points.append((point[0] + random.randint(-rho, rho), point[1] + random.randint(-rho, rho)))
 
         H = cv.getPerspectiveTransform(np.float32(four_points), np.float32(perturbed_four_points))
-        H_inverse = inv(H)
+        # H_inverse = inv(H)
 
-        warped_image = cv.warpPerspective(img, H_inverse, (640, 480))
+        # warped_image = cv.warpPerspective(img, H_inverse, (640, 480))
+        warped_image = cv.warpPerspective(img, H, (640, 480))
 
         Ip1 = test_image[top_point[1]:bottom_point[1], top_point[0]:bottom_point[0]]
         Ip2 = warped_image[top_point[1]:bottom_point[1], top_point[0]:bottom_point[0]]

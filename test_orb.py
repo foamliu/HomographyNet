@@ -37,8 +37,8 @@ def compute_homo(img1, img2):
 
             H, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, 5.0)
             return H
-    except cv2.error:
-        pass
+    except cv2.error as err:
+        print(err)
     return np.identity(3)
 
 
