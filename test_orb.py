@@ -1,0 +1,5 @@
+
+
+
+def compute_homo():
+    
