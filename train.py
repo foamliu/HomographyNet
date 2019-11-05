@@ -15,7 +15,7 @@ def train_net(args):
     np.random.seed(7)
     checkpoint = args.checkpoint
     start_epoch = 0
-    best_acc = 0
+    best_loss = float('inf')
     writer = SummaryWriter()
     epochs_since_improvement = 0
 
@@ -55,32 +55,30 @@ def train_net(args):
     for epoch in range(start_epoch, args.end_epoch):
         model.zero_grad()
         # One epoch's training
-        train_loss, train_acc = train(train_loader=train_loader,
-                                      model=model,
-                                      criterion=criterion,
-                                      optimizer=optimizer,
-                                      epoch=epoch,
-                                      logger=logger)
+        train_loss = train(train_loader=train_loader,
+                           model=model,
+                           criterion=criterion,
+                           optimizer=optimizer,
+                           epoch=epoch,
+                           logger=logger)
 
         writer.add_scalar('model/train_loss', train_loss, epoch)
-        writer.add_scalar('model/train_accuracy', train_acc, epoch)
 
         lr = get_learning_rate(optimizer)
         writer.add_scalar('model/learning_rate', lr, epoch)
         print('\nCurrent effective learning rate: {}\n'.format(lr))
 
         # One epoch's validation
-        valid_loss, valid_acc = valid(valid_loader=valid_loader,
-                                      model=model,
-                                      criterion=criterion,
-                                      logger=logger)
+        valid_loss = valid(valid_loader=valid_loader,
+                           model=model,
+                           criterion=criterion,
+                           logger=logger)
 
         writer.add_scalar('model/valid_loss', valid_loss, epoch)
-        writer.add_scalar('model/valid_accuracy', valid_acc, epoch)
 
         # Check if there was an improvement
-        is_best = valid_acc > best_acc
-        best_acc = max(valid_acc, best_acc)
+        is_best = valid_loss < best_loss
+        best_loss = min(valid_loss, best_loss)
         if not is_best:
             epochs_since_improvement += 1
             print("\nEpochs since last improvement: %d\n" % (epochs_since_improvement,))
@@ -88,7 +86,7 @@ def train_net(args):
             epochs_since_improvement = 0
 
         # Save checkpoint
-        save_checkpoint(epoch, epochs_since_improvement, model, optimizer, best_acc, is_best)
+        save_checkpoint(epoch, epochs_since_improvement, model, optimizer, best_loss, is_best)
 
         scheduler.step(epoch)
 
