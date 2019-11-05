@@ -39,14 +39,16 @@ def compute_homo(img1, img2):
     return None
 
 
-def compute_mse(H):
+def compute_mse(H, H_four_points):
     four_points = np.float32([[0, 0], [0, 128], [128, 128], [128, 0]])
     four_points = np.array([four_points])
-    # print(four_points)
+    print(four_points.shape)
     # print(H)
     predicted_four_pints = cv2.perspectiveTransform(four_points, H)
+    print(predicted_four_pints.shape)
     # print('predicted_four_pints.shape: ' + str(predicted_four_pints.shape))
     error = np.subtract(np.array(predicted_four_pints), np.array(four_points))
+    print('error: ' + str(error))
     mse = (np.square(error)).mean()
     return mse
 
@@ -64,10 +66,11 @@ def test():
         try:
             H = compute_homo(img1, img2)
             if H is not None:
-                mse = compute_mse(H)
+                mse = compute_mse(H, H_four_points)
                 mse_list.append(mse)
         except cv2.error:
             pass
+        break
 
     print('MSE: {:5f}'.format(np.mean(mse_list)))
     print('len(mse_list): ' + str(len(mse_list)))
