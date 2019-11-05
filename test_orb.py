@@ -3,7 +3,7 @@ import pickle
 import cv2
 import numpy as np
 from tqdm import tqdm
-
+from numpy.linalg import inv
 MIN_MATCH_COUNT = 10
 
 
@@ -43,6 +43,7 @@ def compute_homo(img1, img2):
 
 
 def compute_mse(H, H_four_points):
+    H_inverse = inv(H)
     print('H: ' + str(H))
     four_points = np.float32([[64, 64], [320, 64], [320, 320], [64, 320]])
     four_points = np.array([four_points])
