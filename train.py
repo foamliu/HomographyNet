@@ -102,10 +102,10 @@ def train(train_loader, model, criterion, optimizer, epoch, logger):
     for i, (img, target) in enumerate(train_loader):
         # Move to GPU, if available
         img = img.to(device)
-        target = target.float().to(device)
+        target = target.float().to(device)  # [N, 8]
 
         # Forward prop.
-        out = model(img)
+        out = model(img)  # [N, 8]
 
         # Calculate loss
         loss = criterion(out, target)

@@ -1,4 +1,5 @@
 import pickle
+
 import numpy as np
 from torch.utils.data import Dataset
 from torchvision import transforms
@@ -29,8 +30,10 @@ class DeepHNDataset(Dataset):
     def __getitem__(self, i):
         sample = self.samples[i]
         image, H_four_points = sample
+        img = np.zeros((128, 128, 3), np.float)
+        img[:, :, 0:2] = image
         target = np.reshape(H_four_points, (8,))
-        return image, target
+        return img, target
 
     def __len__(self):
         return len(self.samples)
