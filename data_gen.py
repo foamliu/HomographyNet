@@ -30,10 +30,9 @@ class DeepHNDataset(Dataset):
     def __getitem__(self, i):
         sample = self.samples[i]
         image, H_four_points = sample
-        img = np.zeros((128, 128, 3), np.float)
-        img[:, :, 0:2] = image
-        img = transforms.ToPILImage()(img)
-        img = self.transformer(img)
+        img = np.zeros((128, 128, 3), np.float32)
+        img[:, :, 0:2] = image / 255.
+        img = np.transpose(img, (2, 0, 1))  # HxWxC array to CxHxW
         target = np.reshape(H_four_points, (8,))
         return img, target
 
