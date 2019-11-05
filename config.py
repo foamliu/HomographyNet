@@ -2,8 +2,8 @@ import torch
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')  # sets device for model and PyTorch tensors
 
-im_size = 128
-batch_size = 128
+im_size = 256
+batch_size = 32
 
 num_samples = 118287
 num_train = 98287
@@ -21,10 +21,10 @@ print_freq = 100  # print training/validation stats  every __ batches
 checkpoint = None  # path to checkpoint, None if none
 
 # Data gen parameters
-rho = 32
-patch_size = 128
-top_point = (32, 32)
-left_point = (patch_size + 32, 32)
-bottom_point = (patch_size + 32, patch_size + 32)
-right_point = (32, patch_size + 32)
+rho = 64
+patch_size = 256
+top_point = (64, 64)
+left_point = (patch_size + 64, 64)
+bottom_point = (patch_size + 64, patch_size + 64)
+right_point = (64, patch_size + 64)
 four_points = [top_point, left_point, bottom_point, right_point]

@@ -19,7 +19,7 @@ def process(files):
     for f in tqdm(files):
         fullpath = os.path.join(image_folder, f)
         img = cv.imread(fullpath, 0)
-        img = cv.resize(img, (320, 240))
+        img = cv.resize(img, (640, 480))
         test_image = img.copy()
         perturbed_four_points = []
         for point in four_points:
@@ -28,7 +28,7 @@ def process(files):
         H = cv.getPerspectiveTransform(np.float32(four_points), np.float32(perturbed_four_points))
         H_inverse = inv(H)
 
-        warped_image = cv.warpPerspective(img, H_inverse, (320, 240))
+        warped_image = cv.warpPerspective(img, H_inverse, (640, 480))
 
         Ip1 = test_image[top_point[1]:bottom_point[1], top_point[0]:bottom_point[0]]
         Ip2 = warped_image[top_point[1]:bottom_point[1], top_point[0]:bottom_point[0]]
