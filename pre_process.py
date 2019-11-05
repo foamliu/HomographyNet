@@ -1,11 +1,14 @@
 import os
+import pickle
 import random
 
 import cv2 as cv
 import numpy as np
 from numpy.linalg import inv
+from tqdm import tqdm
 
 from config import image_folder, rho, four_points, top_point, bottom_point
+from config import num_train, num_valid, num_test
 
 
 ### This function is provided by Mez Gebre's repository "deep_homography_estimation"
@@ -13,7 +16,7 @@ from config import image_folder, rho, four_points, top_point, bottom_point
 #   Dataset_Generation_Visualization.ipynb
 def process(files):
     samples = []
-    for f in files:
+    for f in tqdm(files):
         fullpath = os.path.join(image_folder, f)
         img = cv.imread(fullpath, 0)
         img = cv.resize(img, (320, 240))
@@ -33,17 +36,28 @@ def process(files):
         training_image = np.dstack((Ip1, Ip2))
         H_four_points = np.subtract(np.array(perturbed_four_points), np.array(four_points))
         datum = (training_image, H_four_points)
+        samples.append(datum)
 
-        return datum
+    return samples
 
 
 if __name__ == "__main__":
     files = [f for f in os.listdir(image_folder) if f.lower().endswith('.jpg')]
     np.random.shuffle(files)
-    print(len(files))
-
     samples = process(files)
+    print(len(samples))
 
-    train = []
-    valid = []
-    test = []
+    train = samples[:num_train]
+    valid = samples[num_train:num_train + num_valid]
+    test = samples[num_train + num_valid:num_train + num_valid + num_test]
+
+    print(len(train))
+    print(len(valid))
+    print(len(test))
+
+    with open('data/train.pkl', 'wb') as f:
+        pickle.dump(train, f)
+    with open('data/valid.pkl', 'wb') as f:
+        pickle.dump(valid, f)
+    with open('data/test.pkl', 'wb') as f:
+        pickle.dump(test, f)
