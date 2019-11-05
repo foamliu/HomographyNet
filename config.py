@@ -4,9 +4,10 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')  # sets de
 
 im_size = 128
 
-num_samples = 90679
-num_train = 80679
+num_samples = 118287
+num_train = 98287
 num_valid = 10000
+num_test = 10000
 image_folder = 'data/train2017'
 data_file = 'data/data.pkl'
 
