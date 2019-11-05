@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 from tqdm import tqdm
 
-MIN_MATCH_COUNT = 10
+MIN_MATCH_COUNT = 5
 
 
 def compute_homo(img1, img2):
