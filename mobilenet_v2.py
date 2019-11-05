@@ -172,4 +172,4 @@ def print_size_of_model(model):
 if __name__ == "__main__":
     model = MobileNetV2().to(device)
     print(model)
-    summary(model, input_size=(2, 128, 128))
+    summary(model, input_size=(3, 128, 128))
