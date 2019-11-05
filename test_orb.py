@@ -4,13 +4,13 @@ import cv2
 import numpy as np
 from tqdm import tqdm
 
-MIN_MATCH_COUNT = 5
+MIN_MATCH_COUNT = 10
 
 
 def compute_homo(img1, img2):
     # Initiate SIFT detector
     # sift = cv2.xfeatures2d.SIFT_create()
-    sift = cv2.xfeatures2d.SURF_create()
+    sift = cv2.xfeatures2d.ORB_create()
 
     # find the keypoints and descriptors with SIFT
     kp1, des1 = sift.detectAndCompute(img1, None)
