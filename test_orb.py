@@ -45,6 +45,7 @@ def compute_mse(H):
     print(four_points)
     print(H)
     predicted_four_pints = cv2.perspectiveTransform(four_points, H)
+    print('predicted_four_pints.shape: ' + str(predicted_four_pints.shape))
     error = np.subtract(np.array(predicted_four_pints), np.array(four_points))
     mse = (np.square(error)).mean()
     return mse
