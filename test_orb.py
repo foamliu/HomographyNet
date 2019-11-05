@@ -49,8 +49,8 @@ def compute_mse(H, H_four_points):
     # print('predicted_four_pints.shape: ' + str(predicted_four_pints.shape))
     error = np.subtract(np.array(predicted_four_pints), np.array(four_points))
     print('error: ' + str(error))
-    print('error: ' + str(H_four_points))
-    mse = (np.square(error)).mean()
+    print('H_four_points: ' + str(H_four_points))
+    mse = (np.square(error - H_four_points)).mean()
     return mse
 
 
