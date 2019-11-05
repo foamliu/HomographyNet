@@ -2,20 +2,6 @@ import pickle
 
 import numpy as np
 from torch.utils.data import Dataset
-from torchvision import transforms
-
-# Data augmentation and normalization for training
-# Just normalization for validation
-data_transforms = {
-    'train': transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
-    ]),
-    'valid': transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-    ]),
-}
 
 
 class DeepHNDataset(Dataset):
@@ -25,7 +11,6 @@ class DeepHNDataset(Dataset):
             samples = pickle.load(file)
 
         self.samples = samples
-        self.transformer = data_transforms[split]
 
     def __getitem__(self, i):
         sample = self.samples[i]
