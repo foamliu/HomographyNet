@@ -49,11 +49,11 @@ def compute_mse(H, H_four_points):
     print('four_points: ' + str(four_points))
     print(four_points.shape)
     # print(H)
-    predicted_four_pints = cv2.perspectiveTransform(four_points, H)
-    print('predicted_four_pints: ' + str(predicted_four_pints))
-    print(predicted_four_pints.shape)
+    pred_four_pints = cv2.perspectiveTransform(four_points, H)
+    print('predicted_four_pints: ' + str(pred_four_pints))
+    print(pred_four_pints.shape)
     # print('predicted_four_pints.shape: ' + str(predicted_four_pints.shape))
-    error = np.subtract(np.array(predicted_four_pints), np.array(four_points))
+    error = np.subtract(np.array(pred_four_pints), np.array(four_points))
     print('error: ' + str(error))
     print('H_four_points: ' + str(H_four_points))
     mse = (np.square(error - H_four_points)).mean()
@@ -68,8 +68,10 @@ def test():
     mse_list = []
     for sample in tqdm(samples):
         image, H_four_points = sample
-        img1 = image[:, :, 0]
-        img2 = image[:, :, 1]
+        img1 = np.zeros((320, 320), np.uint8)
+        img1[64:, 64:] = image[:, :, 0]
+        img2 = np.zeros((320, 320), np.uint8)
+        img2[64:, 64:] = image[:, :, 1]
 
         H = compute_homo(img1, img2)
         mse = compute_mse(H, H_four_points)

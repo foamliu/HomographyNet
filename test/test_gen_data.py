@@ -36,8 +36,8 @@ if __name__ == "__main__":
     Ip2_new = np.zeros((320, 320), np.uint8)
     Ip2_new[64:, 64:] = Ip2
 
-    pred_H = compute_homo(Ip1, Ip2)
-    # pred_H = compute_homo(Ip1_new, Ip2_new)
+    # pred_H = compute_homo(Ip1, Ip2)
+    pred_H = compute_homo(Ip1_new, Ip2_new)
     print(pred_H)
     error = np.reshape(H - pred_H, (9,))
     print(error)
