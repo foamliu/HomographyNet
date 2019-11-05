@@ -123,7 +123,7 @@ class MobileNetV2(nn.Module):
         self.dequant = DeQuantStub()
         # building classifier
         self.classifier = nn.Sequential(
-            nn.Dropout(0.2),
+            nn.Dropout(0.5),
             nn.LeakyReLU(0.2, inplace=True),
             nn.Linear(1280, 8),
         )
