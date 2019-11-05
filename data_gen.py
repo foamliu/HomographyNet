@@ -1,12 +1,7 @@
 import pickle
-import os
-import random
-
-import cv2 as cv
+import numpy as np
 from torch.utils.data import Dataset
 from torchvision import transforms
-
-from config import image_folder
 
 # Data augmentation and normalization for training
 # Just normalization for validation
@@ -29,15 +24,15 @@ class DeepHNDataset(Dataset):
             samples = pickle.load(file)
 
         self.samples = samples
-
         self.transformer = data_transforms[split]
 
     def __getitem__(self, i):
         sample = self.samples[i]
         image, H_four_points = sample
-        print(image.shape)
-        print(H_four_points.shape)
-        return image
+        image = transforms.ToPILImage()(image)
+        image = self.transformer(image)
+        target = np.reshape(H_four_points, (8,))
+        return image, target
 
     def __len__(self):
         return len(self.samples)

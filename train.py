@@ -7,7 +7,7 @@ from torch.utils.tensorboard import SummaryWriter
 from config import device, grad_clip, print_freq, num_workers
 from data_gen import DeepHNDataset
 from mobilenet_v2 import MobileNetV2
-from utils import parse_args, save_checkpoint, AverageMeter, clip_gradient, get_logger, accuracy, get_learning_rate
+from utils import parse_args, save_checkpoint, AverageMeter, clip_gradient, get_logger, get_learning_rate
 
 
 def train_net(args):
@@ -21,7 +21,7 @@ def train_net(args):
 
     # Initialize / load checkpoint
     if checkpoint is None:
-        model = RankNet()
+        model = MobileNetV2()
         model = nn.DataParallel(model)
 
         optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
@@ -42,10 +42,10 @@ def train_net(args):
     criterion = nn.MSELoss().to(device)
 
     # Custom dataloaders
-    train_dataset = DeepIQADataset('train')
+    train_dataset = DeepHNDataset('train')
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True,
                                                num_workers=num_workers)
-    valid_dataset = DeepIQADataset('valid')
+    valid_dataset = DeepHNDataset('valid')
     valid_loader = torch.utils.data.DataLoader(valid_dataset, batch_size=args.batch_size, shuffle=False,
                                                num_workers=num_workers)
 
@@ -97,21 +97,18 @@ def train(train_loader, model, criterion, optimizer, epoch, logger):
     model.train()  # train mode (dropout and batchnorm is used)
 
     losses = AverageMeter()
-    accs = AverageMeter()
 
     # Batches
-    for i, (img_0, img_1, target) in enumerate(train_loader):
+    for i, (img, target) in enumerate(train_loader):
         # Move to GPU, if available
-        img_0 = img_0.to(device)
-        img_1 = img_1.to(device)
+        img = img.to(device)
         target = target.float().to(device)
 
         # Forward prop.
-        pred = model(img_0, img_1)
+        out = model(img)
 
         # Calculate loss
-        loss = criterion(pred, target)
-        acc = accuracy(pred, target)
+        loss = criterion(out, target)
 
         # Back prop.
         optimizer.zero_grad()
@@ -125,52 +122,46 @@ def train(train_loader, model, criterion, optimizer, epoch, logger):
 
         # Keep track of metrics
         losses.update(loss.item())
-        accs.update(acc)
 
         # Print status
         if i % print_freq == 0:
             if i % print_freq == 0:
                 status = 'Epoch: [{0}][{1}/{2}]\t' \
-                         'Loss {loss.val:.5f} ({loss.avg:.5f})\t' \
-                         'Accuracy {acc.val:.5f} ({acc.avg:.5f})\t'.format(epoch, i,
-                                                                           len(train_loader),
-                                                                           loss=losses,
-                                                                           acc=accs,
-                                                                           )
+                         'Loss {loss.val:.5f} ({loss.avg:.5f})'.format(epoch, i,
+                                                                       len(train_loader),
+                                                                       loss=losses,
+
+                                                                       )
                 logger.info(status)
 
-    return losses.avg, accs.avg
+    return losses.avg
 
 
 def valid(valid_loader, model, criterion, logger):
     model.eval()  # eval mode (dropout and batchnorm is NOT used)
 
     losses = AverageMeter()
-    accs = AverageMeter()
 
     # Batches
-    for i, (img_0, img_1, target) in enumerate(valid_loader):
+    for i, (img, target) in enumerate(valid_loader):
         # Move to GPU, if available
-        img_0 = img_0.to(device)
-        img_1 = img_1.to(device)
+        img = img.to(device)
         target = target.float().to(device)
 
         # Forward prop.
-        pred = model(img_0, img_1)
+        out = model(img)
 
         # Calculate loss
-        loss = criterion(pred, target)
-        acc = accuracy(pred, target)
+        loss = criterion(out, target)
 
         # Keep track of metrics
         losses.update(loss.item())
-        accs.update(acc)
 
     # Print status
-    status = 'Validation\t Loss {loss.avg:.5f}\t Accuracy {acc.avg:.5f}\n'.format(loss=losses, acc=accs)
+    status = 'Validation\t Loss {loss.avg:.5f}\n'.format(loss=losses)
     logger.info(status)
 
-    return losses.avg, accs.avg
+    return losses.avg
 
 
 def main():
