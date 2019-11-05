@@ -5,21 +5,14 @@ import cv2 as cv
 import numpy as np
 from numpy.linalg import inv
 
-from config import image_folder
-
-rho = 32
-patch_size = 128
-top_point = (32, 32)
-left_point = (patch_size + 32, 32)
-bottom_point = (patch_size + 32, patch_size + 32)
-right_point = (32, patch_size + 32)
-four_points = [top_point, left_point, bottom_point, right_point]
+from config import image_folder, rho, four_points, top_point, bottom_point
 
 
 ### This function is provided by Mez Gebre's repository "deep_homography_estimation"
 #   https://github.com/mez/deep_homography_estimation
 #   Dataset_Generation_Visualization.ipynb
 def process(files):
+    samples = []
     for f in files:
         fullpath = os.path.join(image_folder, f)
         img = cv.imread(fullpath, 0)
