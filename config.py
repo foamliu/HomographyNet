@@ -7,7 +7,7 @@ im_size = 128
 num_samples = 90679
 num_train = 80679
 num_valid = 10000
-image_folder = 'data/256x256'
+image_folder = 'data/train2017'
 data_file = 'data/data.pkl'
 
 
