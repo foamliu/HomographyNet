@@ -33,7 +33,7 @@ if __name__ == '__main__':
     for (img, target) in tqdm(test_loader):
         # Move to CPU, if available
         img = img.to(device)  # [N, 3, 128, 128]
-        target = target.to(device)  # [N, 8]
+        target = target.float().to(device)  # [N, 8]
 
         # Forward prop.
         with torch.no_grad():
