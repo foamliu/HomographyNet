@@ -9,7 +9,9 @@ num_train = 98287
 num_valid = 10000
 num_test = 10000
 image_folder = 'data/train2017'
-data_file = 'data/data.pkl'
+train_file = 'data/train.pkl'
+valid_file = 'data/valid.pkl'
+test_file = 'data/test.pkl'
 
 # Training parameters
 num_workers = 8  # for data-loading

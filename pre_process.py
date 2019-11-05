@@ -8,7 +8,7 @@ from numpy.linalg import inv
 from tqdm import tqdm
 
 from config import image_folder, rho, four_points, top_point, bottom_point
-from config import num_train, num_valid, num_test
+from config import num_train, num_valid, num_test, train_file, valid_file, test_file
 
 
 ### This function is provided by Mez Gebre's repository "deep_homography_estimation"
@@ -55,9 +55,9 @@ if __name__ == "__main__":
     print(len(valid))
     print(len(test))
 
-    with open('data/train.pkl', 'wb') as f:
+    with open(train_file, 'wb') as f:
         pickle.dump(train, f)
-    with open('data/valid.pkl', 'wb') as f:
+    with open(valid_file, 'wb') as f:
         pickle.dump(valid, f)
-    with open('data/test.pkl', 'wb') as f:
+    with open(test_file, 'wb') as f:
         pickle.dump(test, f)
