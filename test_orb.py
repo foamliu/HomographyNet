@@ -62,10 +62,12 @@ def test():
         img1 = image[:, :, 0]
         img2 = image[:, :, 1]
         H = compute_homo(img1, img2)
-        mse = compute_mse(H)
-        mse_list.append(mse)
+        if H is not None:
+            mse = compute_mse(H)
+            mse_list.append(mse)
 
     print('MSE: {:5f}'.format(np.mean(mse_list)))
+    print('len(mse_list): ' + str(len(mse_list)))
 
 
 if __name__ == "__main__":
