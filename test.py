@@ -38,7 +38,7 @@ if __name__ == '__main__':
         # Forward prop.
         with torch.no_grad():
             start = time.time()
-            out = model(img)
+            out = model(img)  # [N, 8]
             end = time.time()
             elapsed = elapsed + (end - start)
 
