@@ -74,9 +74,11 @@ def test():
         img2[64:, 64:] = image[:, :, 1]
 
         H = compute_homo(img1, img2)
-        mse = compute_mse(H, H_four_points)
-        mse_list.append(mse)
-
+        try:
+            mse = compute_mse(H, H_four_points)
+            mse_list.append(mse)
+        except cv2.error as err:
+            print(err)
     print('MSE: {:5f}'.format(np.mean(mse_list)))
     print('len(mse_list): ' + str(len(mse_list)))
 
