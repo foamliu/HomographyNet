@@ -126,7 +126,7 @@ class MobileNetV2(nn.Module):
             nn.Dropout(0.2),
             nn.LeakyReLU(0.2, inplace=True),
             nn.Linear(1280, 8),
-            nn.Sigmoid()
+            # nn.Sigmoid()
         )
 
         # weight initialization
@@ -149,7 +149,7 @@ class MobileNetV2(nn.Module):
         x = self.features(x)
         x = x.mean([2, 3])
         x = self.classifier(x)
-        x = (x - 0.5) * 64  # (0, 1) -> (-32, 32)
+        # x = (x - 0.5) * 64  # (0, 1) -> (-32, 32)
         x = self.dequant(x)
         return x
 
