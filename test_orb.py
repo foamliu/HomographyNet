@@ -25,13 +25,14 @@ def compute_homo(img1, img2):
         kp2 = orb.detect(img2, None)
         des2 = orb.compute(img2, kp2)
 
-        FLANN_INDEX_KDTREE = 0
-        index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
-        search_params = dict(checks=50)
+        # create BFMatcher object
+        bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 
-        flann = cv2.FlannBasedMatcher(index_params, search_params)
+        # Match descriptors.
+        matches = bf.match(des1, des2)
 
-        matches = flann.knnMatch(des1, des2)
+        # Sort them in the order of their distance.
+        matches = sorted(matches, key=lambda x: x.distance)
 
         # store all the good matches as per Lowe's ratio test.
         good = []
