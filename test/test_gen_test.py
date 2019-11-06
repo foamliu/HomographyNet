@@ -1,10 +1,18 @@
 import random
+
 import cv2 as cv
 import numpy as np
-
-from config import rho, four_points, top_point, bottom_point
 from numpy.linalg import inv
+
 from test_orb import compute_homo
+
+rho = 64
+patch_size = 256
+top_point = (rho, rho)
+left_point = (patch_size + rho, rho)
+bottom_point = (patch_size + rho, patch_size + rho)
+right_point = (rho, patch_size + rho)
+four_points = [top_point, left_point, bottom_point, right_point]
 
 if __name__ == "__main__":
     # np.random.seed(7)
