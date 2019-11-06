@@ -4,6 +4,9 @@ import cv2
 import numpy as np
 from tqdm import tqdm
 
+from config import print_freq
+from utils import AverageMeter
+
 MIN_MATCH_COUNT = 10
 
 
@@ -53,11 +56,11 @@ def compute_mse(H, H_four_points):
     # print('predicted_four_pints: ' + str(pred_four_pints))
     # print(pred_four_pints.shape)
     # print('predicted_four_pints.shape: ' + str(predicted_four_pints.shape))
-    error = np.subtract(np.array(pred_four_pints), np.array(four_points))
+    diff = np.subtract(np.array(pred_four_pints), np.array(four_points))
+    diff = np.clip(diff, -64., 64.)
     # print('error: ' + str(error))
     # print('H_four_points: ' + str(H_four_points))
-    mse = (np.square(error - H_four_points)).mean()
-    print(mse)
+    mse = (np.square(diff - H_four_points)).mean()
     return mse
 
 
@@ -67,7 +70,8 @@ def test():
         samples = pickle.load(file)
 
     mse_list = []
-    for sample in tqdm(samples):
+    mses = AverageMeter()
+    for i, sample in tqdm(enumerate(samples)):
         image, H_four_points = sample
         img1 = np.zeros((320, 320), np.uint8)
         img1[64:, 64:] = image[:, :, 0]
@@ -78,8 +82,12 @@ def test():
         try:
             mse = compute_mse(H, H_four_points)
             mse_list.append(mse)
+            mses.update(mse)
         except cv2.error as err:
             print(err)
+        if i % print_freq == 0:
+            print('Loss {mse.val:.5f} ({mse.avg:.5f})'.format(mse=mses))
+
     print('MSE: {:5f}'.format(np.mean(mse_list)))
     print('len(mse_list): ' + str(len(mse_list)))
 
