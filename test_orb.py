@@ -2,7 +2,6 @@ import pickle
 
 import cv2
 import numpy as np
-from tqdm import tqdm
 
 from config import print_freq
 from utils import AverageMeter
@@ -71,7 +70,7 @@ def test():
 
     mse_list = []
     mses = AverageMeter()
-    for i, sample in tqdm(enumerate(samples)):
+    for i, sample in enumerate(samples):
         image, H_four_points = sample
         img1 = np.zeros((320, 320), np.uint8)
         img1[64:, 64:] = image[:, :, 0]
