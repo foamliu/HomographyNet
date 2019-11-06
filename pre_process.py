@@ -8,7 +8,31 @@ from numpy.linalg import inv
 from tqdm import tqdm
 
 from config import image_folder
-from config import num_train, num_valid, num_test, train_file, valid_file, test_file
+from config import train_file, valid_file, test_file
+
+
+def get_datum(img, test_image, size, rho, top_point, patch_size):
+    left_point = (patch_size + rho, rho)
+    bottom_point = (patch_size + rho, patch_size + rho)
+    right_point = (rho, patch_size + rho)
+    four_points = [top_point, left_point, bottom_point, right_point]
+
+    perturbed_four_points = []
+    for point in four_points:
+        perturbed_four_points.append((point[0] + random.randint(-rho, rho), point[1] + random.randint(-rho, rho)))
+
+    H = cv.getPerspectiveTransform(np.float32(four_points), np.float32(perturbed_four_points))
+    H_inverse = inv(H)
+
+    warped_image = cv.warpPerspective(img, H_inverse, size)
+
+    Ip1 = test_image[top_point[1]:bottom_point[1], top_point[0]:bottom_point[0]]
+    Ip2 = warped_image[top_point[1]:bottom_point[1], top_point[0]:bottom_point[0]]
+
+    training_image = np.dstack((Ip1, Ip2))
+    H_four_points = np.subtract(np.array(perturbed_four_points), np.array(four_points))
+    datum = (training_image, H_four_points)
+    return datum
 
 
 ### This function is provided by Mez Gebre's repository "deep_homography_estimation"
@@ -27,34 +51,22 @@ def process(files, is_test):
         rho = 32
         patch_size = 128
 
-    top_point = (rho, rho)
-    left_point = (patch_size + rho, rho)
-    bottom_point = (patch_size + rho, patch_size + rho)
-    right_point = (rho, patch_size + rho)
-    four_points = [top_point, left_point, bottom_point, right_point]
-
     samples = []
     for f in tqdm(files):
         fullpath = os.path.join(image_folder, f)
         img = cv.imread(fullpath, 0)
         img = cv.resize(img, size)
         test_image = img.copy()
-        perturbed_four_points = []
-        for point in four_points:
-            perturbed_four_points.append((point[0] + random.randint(-rho, rho), point[1] + random.randint(-rho, rho)))
 
-        H = cv.getPerspectiveTransform(np.float32(four_points), np.float32(perturbed_four_points))
-        H_inverse = inv(H)
-
-        warped_image = cv.warpPerspective(img, H_inverse, size)
-
-        Ip1 = test_image[top_point[1]:bottom_point[1], top_point[0]:bottom_point[0]]
-        Ip2 = warped_image[top_point[1]:bottom_point[1], top_point[0]:bottom_point[0]]
-
-        training_image = np.dstack((Ip1, Ip2))
-        H_four_points = np.subtract(np.array(perturbed_four_points), np.array(four_points))
-        datum = (training_image, H_four_points)
-        samples.append(datum)
+        if not is_test:
+            for top_point in [(32, 32), (160, 32), (32, 128), (160, 128), (128, 88)]:
+                # top_point = (rho, rho)
+                datum = get_datum(img, test_image, size, rho, top_point, patch_size)
+                samples.append(datum)
+        else:
+            top_point = (rho, rho)
+            datum = get_datum(img, test_image, size, rho, top_point, patch_size)
+            samples.append(datum)
 
     return samples
 
@@ -66,9 +78,13 @@ if __name__ == "__main__":
     num_files = len(files)
     print('num_files: ' + str(num_files))
 
-    train_files = files[:num_train]
-    valid_files = files[num_train:num_train + num_valid]
-    test_files = files[num_train + num_valid:num_train + num_valid + num_test]
+    num_train_files = 100000
+    num_valid_files = 8287
+    num_test_files = 10000
+
+    train_files = files[:num_train_files]
+    valid_files = files[num_train_files:num_train_files + num_valid_files]
+    test_files = files[num_train_files + num_valid_files:num_train_files + num_valid_files + num_test_files]
 
     train = process(train_files, False)
     valid = process(valid_files, False)
