@@ -86,7 +86,7 @@ def test():
         except cv2.error as err:
             print(err)
         if i % print_freq == 0:
-            print('Loss {mse.val:.5f} ({mse.avg:.5f})'.format(mse=mses))
+            print('[{0}/{1}]\tMSE {mse.val:.5f} ({mse.avg:.5f})'.format(i, len(samples), mse=mses))
 
     print('MSE: {:5f}'.format(np.mean(mse_list)))
     print('len(mse_list): ' + str(len(mse_list)))
