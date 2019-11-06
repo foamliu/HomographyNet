@@ -57,6 +57,7 @@ def compute_mse(H, H_four_points):
     # print('error: ' + str(error))
     # print('H_four_points: ' + str(H_four_points))
     mse = (np.square(error - H_four_points)).mean()
+    print(mse)
     return mse
 
 
