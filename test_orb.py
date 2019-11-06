@@ -17,8 +17,13 @@ def compute_homo(img1, img2):
         orb = cv2.ORB_create()
 
         # find the keypoints and descriptors with SIFT
-        kp1, des1 = orb.detectAndCompute(img1, None)
-        kp2, des2 = orb.detectAndCompute(img2, None)
+        # kp1, des1 = orb.detectAndCompute(img1, None)
+        kp1 = orb.detect(img1, None)
+        des1 = orb.compute(img1, kp1)
+
+        # kp2, des2 = orb.detectAndCompute(img2, None)
+        kp2 = orb.detect(img2, None)
+        des2 = orb.compute(img2, kp2)
 
         FLANN_INDEX_KDTREE = 0
         index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
