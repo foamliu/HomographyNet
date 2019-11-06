@@ -31,7 +31,7 @@ def compute_homo(img1, img2):
 
         flann = cv2.FlannBasedMatcher(index_params, search_params)
 
-        matches = flann.knnMatch(des1, des2, k=2)
+        matches = flann.knnMatch(des1, des2)
 
         # store all the good matches as per Lowe's ratio test.
         good = []
