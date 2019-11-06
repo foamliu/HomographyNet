@@ -12,8 +12,9 @@ MIN_MATCH_COUNT = 10
 def compute_homo(img1, img2):
     try:
         # Initiate SIFT detector
-        sift = cv2.xfeatures2d.SIFT_create()
+        # sift = cv2.xfeatures2d.SIFT_create()
         # sift = cv2.xfeatures2d.SURF_create()
+        sift = cv2.ORB_create()
 
         # find the keypoints and descriptors with SIFT
         kp1, des1 = sift.detectAndCompute(img1, None)
