@@ -1,13 +1,13 @@
 import numpy as np
 import torch
 from torch import nn
-from torch.optim.lr_scheduler import MultiStepLR
 from torch.utils.tensorboard import SummaryWriter
 
 from config import device, grad_clip, print_freq, num_workers
 from data_gen import DeepHNDataset
 from mobilenet_v2 import MobileNetV2
-from utils import parse_args, save_checkpoint, AverageMeter, clip_gradient, get_logger, get_learning_rate
+from optimizer import HNetOptimizer
+from utils import parse_args, save_checkpoint, AverageMeter, clip_gradient, get_logger
 
 
 def train_net(args):
@@ -24,7 +24,7 @@ def train_net(args):
         model = MobileNetV2()
         model = nn.DataParallel(model)
 
-        optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+        optimizer = HNetOptimizer(torch.optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum))
 
     else:
         checkpoint = torch.load(checkpoint)
@@ -49,8 +49,6 @@ def train_net(args):
     valid_loader = torch.utils.data.DataLoader(valid_dataset, batch_size=args.batch_size, shuffle=False,
                                                num_workers=num_workers)
 
-    scheduler = MultiStepLR(optimizer, milestones=[30, 80], gamma=0.1)
-
     # Epochs
     for epoch in range(start_epoch, args.end_epoch):
         model.zero_grad()
@@ -63,10 +61,8 @@ def train_net(args):
                            logger=logger)
 
         writer.add_scalar('model/train_loss', train_loss, epoch)
-
-        lr = get_learning_rate(optimizer)
-        writer.add_scalar('model/learning_rate', lr, epoch)
-        print('\nCurrent effective learning rate: {}\n'.format(lr))
+        writer.add_scalar('model/learning_rate', optimizer.lr, epoch)
+        print('\nCurrent effective learning rate: {}\n'.format(optimizer.lr))
 
         # One epoch's validation
         valid_loss = valid(valid_loader=valid_loader,
@@ -87,8 +83,6 @@ def train_net(args):
 
         # Save checkpoint
         save_checkpoint(epoch, epochs_since_improvement, model, optimizer, best_loss, is_best)
-
-        scheduler.step(epoch)
 
 
 def train(train_loader, model, criterion, optimizer, epoch, logger):
