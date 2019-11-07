@@ -45,7 +45,7 @@ if __name__ == '__main__':
             elapsed = elapsed + (end - start)
 
         # Calculate loss
-        loss = criterion(out * 2, target)
+        loss = criterion(out, target)
 
         losses.update(loss.item(), img.size(0))
 
