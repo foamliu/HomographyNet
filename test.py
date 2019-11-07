@@ -2,6 +2,7 @@ import time
 
 import torch
 from torch import nn
+from torch.nn import functional as F
 from tqdm import tqdm
 
 from config import batch_size, num_workers
@@ -32,6 +33,7 @@ if __name__ == '__main__':
     # Batches
     for (img, target) in tqdm(test_loader):
         # Move to CPU, if available
+        img = F.upsample(img, size=(img.size(2) // 2, img.size(3) // 2), mode='bilinear')
         img = img.to(device)  # [N, 3, 128, 128]
         target = target.float().to(device)  # [N, 8]
 
@@ -43,7 +45,7 @@ if __name__ == '__main__':
             elapsed = elapsed + (end - start)
 
         # Calculate loss
-        loss = criterion(out, target)
+        loss = criterion(out * 2, target)
 
         losses.update(loss.item(), img.size(0))
 
