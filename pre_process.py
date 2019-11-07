@@ -16,11 +16,11 @@ def get_datum(img, test_image, size, rho, top_point, patch_size):
     bottom_point = (patch_size + top_point[0], patch_size + top_point[1])
     right_point = (patch_size + top_point[0], top_point[1])
     four_points = [top_point, left_point, bottom_point, right_point]
-    print('top_point: ' + str(top_point))
-    print('left_point: ' + str(left_point))
-    print('bottom_point: ' + str(bottom_point))
-    print('right_point: ' + str(right_point))
-    print('four_points: ' + str(four_points))
+    # print('top_point: ' + str(top_point))
+    # print('left_point: ' + str(left_point))
+    # print('bottom_point: ' + str(bottom_point))
+    # print('right_point: ' + str(right_point))
+    # print('four_points: ' + str(four_points))
 
     perturbed_four_points = []
     for point in four_points:
@@ -31,14 +31,14 @@ def get_datum(img, test_image, size, rho, top_point, patch_size):
 
     warped_image = cv.warpPerspective(img, H_inverse, size)
 
-    print('test_image.shape: ' + str(test_image.shape))
-    print('warped_image.shape: ' + str(warped_image.shape))
+    # print('test_image.shape: ' + str(test_image.shape))
+    # print('warped_image.shape: ' + str(warped_image.shape))
 
     Ip1 = test_image[top_point[1]:bottom_point[1], top_point[0]:bottom_point[0]]
     Ip2 = warped_image[top_point[1]:bottom_point[1], top_point[0]:bottom_point[0]]
 
     training_image = np.dstack((Ip1, Ip2))
-    H_four_points = np.subtract(np.array(perturbed_four_points), np.array(four_points))
+    # H_four_points = np.subtract(np.array(perturbed_four_points), np.array(four_points))
     datum = (training_image, np.array(four_points), np.array(perturbed_four_points))
     return datum
 
