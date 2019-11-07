@@ -55,10 +55,12 @@ def compute_mse(H, perturbed_four_points):
     # print('predicted_four_pints.shape: ' + str(predicted_four_pints.shape))
     diff = np.subtract(np.array(pred_four_pints), np.array(four_points))
     diff = np.clip(diff, -64., 64.)
-    # print('error: ' + str(error))
-    # print('H_four_points: ' + str(H_four_points))
+    print('diff: ' + str(diff))
     H_four_points = np.subtract(perturbed_four_points, four_points)
-    mace = (np.abs(diff - H_four_points)).mean()
+    print('H_four_points: ' + str(H_four_points))
+    error = diff - H_four_points
+    print('error: ' + str(error))
+    mace = (np.abs(error)).mean()
     return mace
 
 
@@ -85,6 +87,7 @@ def test():
             print(err)
         if i % print_freq == 0:
             print('[{0}/{1}]\tMSE {mse.val:.5f} ({mse.avg:.5f})'.format(i, len(samples), mse=mses))
+        break
 
     print('MSE: {:5f}'.format(np.mean(mse_list)))
     print('len(mse_list): ' + str(len(mse_list)))
