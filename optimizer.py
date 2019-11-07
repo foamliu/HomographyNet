@@ -15,7 +15,7 @@ class HNetOptimizer(object):
 
     def _update_lr(self):
         self.step_num += 1
-        # if self.step_num % 30000 == 0:
-        #     self.lr = self.lr / 10
-        #     for param_group in self.optimizer.param_groups:
-        #         param_group['lr'] = self.lr
+        if self.step_num % 50000 == 0 and self.lr > 1e-5:
+            self.lr = self.lr / 10
+            for param_group in self.optimizer.param_groups:
+                param_group['lr'] = self.lr
