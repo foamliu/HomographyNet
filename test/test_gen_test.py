@@ -53,7 +53,7 @@ if __name__ == "__main__":
     # inv_pred_H = inv(pred_H)
     # print('inv_pred_H: ' + str(inv_pred_H))
 
-    four_points = np.float32(four_points)
+    four_points = np.float32([four_points])
     print('four_points.shape: ' + str(four_points.shape))
 
     pred_four_pints = cv.perspectiveTransform(np.float32(four_points), pred_H)

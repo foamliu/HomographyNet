@@ -44,8 +44,7 @@ def compute_homo(img1, img2):
     return np.identity(3)
 
 
-def compute_mse(H, four_points, perturbed_four_points):
-    # print('H: ' + str(H))
+def compute_mse(H, perturbed_four_points):
     four_points = np.float32([[64, 64], [320, 64], [320, 320], [64, 320]])
     four_points = np.array([four_points])
     # print('four_points: ' + str(four_points))
@@ -73,14 +72,14 @@ def test():
     mses = AverageMeter()
     for i, sample in enumerate(samples):
         image, four_points, perturbed_four_points = sample
-        img1 = np.zeros((320, 320), np.uint8)
-        img1[64:, 64:] = image[:, :, 0]
-        img2 = np.zeros((320, 320), np.uint8)
-        img2[64:, 64:] = image[:, :, 1]
+        img1 = np.zeros((640, 480), np.uint8)
+        img1[64:320, 64:320] = image[:, :, 0]
+        img2 = np.zeros((640, 480), np.uint8)
+        img2[64:320, 64:320] = image[:, :, 1]
 
-        H = compute_homo(img1, img2)
+        H = compute_homo(img2, img1)
         try:
-            mse = compute_mse(H, four_points, perturbed_four_points)
+            mse = compute_mse(H, perturbed_four_points)
             mse_list.append(mse)
             mses.update(mse)
         except cv2.error as err:
