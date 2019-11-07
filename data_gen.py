@@ -2,6 +2,7 @@ import pickle
 
 import numpy as np
 from torch.utils.data import Dataset
+
 from config import im_size
 
 
@@ -10,7 +11,7 @@ class DeepHNDataset(Dataset):
         filename = 'data/{}.pkl'.format(split)
         with open(filename, 'rb') as file:
             samples = pickle.load(file)
-
+        np.random.shuffle(samples)
         self.samples = samples
 
     def __getitem__(self, i):
