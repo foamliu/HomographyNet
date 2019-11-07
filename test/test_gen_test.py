@@ -24,7 +24,9 @@ if __name__ == "__main__":
     perturbed_four_points = []
     for point in four_points:
         perturbed_four_points.append((point[0] + random.randint(-rho, rho), point[1] + random.randint(-rho, rho)))
-    print('perturbed_four_points: ' + str(perturbed_four_points))
+    print('perturbed_four_points: ' + str(np.float32(perturbed_four_points)))
+    H_four_points = np.subtract(np.array(perturbed_four_points), np.array(four_points))
+    print('H_four_points: ' + str(H_four_points))
 
     H = cv.getPerspectiveTransform(np.float32(four_points), np.float32(perturbed_four_points))
     print('H: ' + str(H))
@@ -40,20 +42,29 @@ if __name__ == "__main__":
     test_image = cv.polylines(test_image, [np.int32(perturbed_four_points)], True, 255, 3, cv.LINE_AA)
     warped_image = cv.polylines(warped_image, [np.int32(four_points)], True, 255, 3, cv.LINE_AA)
 
-    Ip1_new = np.zeros((320, 320), np.uint8)
-    Ip1_new[64:, 64:] = Ip1
-    Ip2_new = np.zeros((320, 320), np.uint8)
-    Ip2_new[64:, 64:] = Ip2
+    Ip1_new = np.zeros((640, 480), np.uint8)
+    Ip1_new[64:320, 64:320] = Ip1
+    Ip2_new = np.zeros((640, 480), np.uint8)
+    Ip2_new[64:320, 64:320] = Ip2
 
     # pred_H = compute_homo(Ip1, Ip2)
-    pred_H = compute_homo(Ip1_new, Ip2_new)
-    print(pred_H)
-    error = np.reshape(H - pred_H, (9,))
-    print(error)
-    print(np.abs(error).mean())
+    pred_H = compute_homo(Ip2_new, Ip1_new)
+    print('pred_H: ' + str(pred_H))
+    # inv_pred_H = inv(pred_H)
+    # print('inv_pred_H: ' + str(inv_pred_H))
 
-    # pred_four_pints = cv.perspectiveTransform(np.array(four_points), pred_H)
-    Ip3 = cv.warpPerspective(Ip1, pred_H, (256, 256))
+    four_points = np.float32(four_points)
+    print('four_points.shape: ' + str(four_points.shape))
+
+    pred_four_pints = cv.perspectiveTransform(np.float32(four_points), pred_H)
+    # pred_four_pints = np.dot(pred_H, np.float32(four_points))
+    # print('pred_four_pints: ' + str(np.float32(pred_four_pints)))
+
+    Ip3 = cv.warpPerspective(Ip1_new, pred_H, (640, 480))
+
+    error = np.subtract(np.array(pred_four_pints), np.array(four_points))
+    error = np.abs(error).mean()
+    print('MACE: ' + str(error))
 
     cv.imshow('test_image', test_image)
     cv.imshow('warped_image', warped_image)
