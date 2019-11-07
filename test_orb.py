@@ -47,6 +47,7 @@ def compute_homo(img1, img2):
 def compute_mse(H, perturbed_four_points):
     four_points = np.float32([[64, 64], [320, 64], [320, 320], [64, 320]])
     print('four_points: ' + str(four_points))
+    print('perturbed_four_points: ' + str(perturbed_four_points))
     print(four_points.shape)
     # print(H)
     pred_four_pints = cv2.perspectiveTransform(np.array([four_points]), H)
