@@ -24,7 +24,7 @@ def train_net(args):
         model = MobileNetV2()
         model = nn.DataParallel(model)
 
-        optimizer = HNetOptimizer(torch.optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum))
+        optimizer = HNetOptimizer(torch.optim.Adam(model.parameters(), lr=args.lr))
 
     else:
         checkpoint = torch.load(checkpoint)
