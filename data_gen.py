@@ -15,10 +15,11 @@ class DeepHNDataset(Dataset):
 
     def __getitem__(self, i):
         sample = self.samples[i]
-        image, H_four_points = sample
+        image, four_points, perturbed_four_points = sample
         img = np.zeros((im_size, im_size, 3), np.float32)
         img[:, :, 0:2] = image / 255.
         img = np.transpose(img, (2, 0, 1))  # HxWxC array to CxHxW
+        H_four_points = np.subtract(np.array(perturbed_four_points), np.array(four_points))
         target = np.reshape(H_four_points, (8,))
         return img, target
 
