@@ -1,5 +1,6 @@
 # HomographyNet
 
+This is a deep convolutional neural network for estimating the relative homography between a pair of images. 
 Deep Image Homography Estimation [paper](https://arxiv.org/abs/1606.03798) implementation in PyTorch.
 
 ## Features
@@ -43,3 +44,5 @@ Homography Estimation Comparison on Warped MS-COCO 14 Test Set.
 $ python test.py
 $ python test_orb.py
 ```
+### Result
+![image](https://gitee.com/foamliu/HomographyNet/raw/master/images/result.jpg)
