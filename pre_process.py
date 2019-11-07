@@ -12,10 +12,15 @@ from config import train_file, valid_file, test_file
 
 
 def get_datum(img, test_image, size, rho, top_point, patch_size):
-    left_point = (patch_size + rho, rho)
-    bottom_point = (patch_size + rho, patch_size + rho)
-    right_point = (rho, patch_size + rho)
+    left_point = (top_point[0], patch_size + top_point[1])
+    bottom_point = (patch_size + top_point[0], patch_size + top_point[1])
+    right_point = (patch_size + top_point[0], top_point[1])
     four_points = [top_point, left_point, bottom_point, right_point]
+    print('top_point: ' + str(top_point))
+    print('left_point: ' + str(left_point))
+    print('bottom_point: ' + str(bottom_point))
+    print('right_point: ' + str(right_point))
+    print('four_points: ' + str(four_points))
 
     perturbed_four_points = []
     for point in four_points:
@@ -26,12 +31,15 @@ def get_datum(img, test_image, size, rho, top_point, patch_size):
 
     warped_image = cv.warpPerspective(img, H_inverse, size)
 
+    print('test_image.shape: ' + str(test_image.shape))
+    print('warped_image.shape: ' + str(warped_image.shape))
+
     Ip1 = test_image[top_point[1]:bottom_point[1], top_point[0]:bottom_point[0]]
     Ip2 = warped_image[top_point[1]:bottom_point[1], top_point[0]:bottom_point[0]]
 
     training_image = np.dstack((Ip1, Ip2))
     H_four_points = np.subtract(np.array(perturbed_four_points), np.array(four_points))
-    datum = (training_image, H_four_points)
+    datum = (training_image, np.array(four_points), np.array(perturbed_four_points))
     return datum
 
 
@@ -59,7 +67,8 @@ def process(files, is_test):
         test_image = img.copy()
 
         if not is_test:
-            for top_point in [(32, 32), (160, 32), (32, 128), (160, 128), (128, 88)]:
+            for top_point in [(0 + 32, 0 + 32), (128 + 32, 0 + 32), (0 + 32, 48 + 32), (128 + 32, 48 + 32),
+                              (64 + 32, 24 + 32)]:
                 # top_point = (rho, rho)
                 datum = get_datum(img, test_image, size, rho, top_point, patch_size)
                 samples.append(datum)

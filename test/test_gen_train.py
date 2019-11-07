@@ -4,14 +4,15 @@ from pre_process import get_datum
 
 if __name__ == "__main__":
     fullpath = '000000523955.jpg'
-    img = cv.imread(fullpath, 0)
-    img = cv.resize(img, (320, 240))
-    test_image = img.copy()
     size = (320, 240)
     rho = 32
     patch_size = 128
 
-    for top_point in [(32, 32), (160, 32), (32, 128), (160, 128), (128, 88)]:
+    img = cv.imread(fullpath, 0)
+    img = cv.resize(img, size)
+    test_image = img.copy()
+
+    for top_point in [(0 + 32, 0 + 32), (128 + 32, 0 + 32), (0 + 32, 48 + 32), (128 + 32, 48 + 32), (64 + 32, 24 + 32)]:
         # top_point = (rho, rho)
         datum = get_datum(img, test_image, size, rho, top_point, patch_size)
         img1 = datum[0][:, :, 0]
