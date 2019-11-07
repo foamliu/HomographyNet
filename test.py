@@ -33,7 +33,7 @@ if __name__ == '__main__':
     # Batches
     for (img, target) in tqdm(test_loader):
         # Move to CPU, if available
-        img = F.interpolate(img, size=(img.size(2) // 2, img.size(3) // 2), mode='bicubic', align_corners=False)
+        # img = F.interpolate(img, size=(img.size(2) // 2, img.size(3) // 2), mode='bicubic', align_corners=False)
         img = img.to(device)  # [N, 3, 128, 128]
         target = target.float().to(device)  # [N, 8]
 
