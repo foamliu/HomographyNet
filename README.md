@@ -45,4 +45,12 @@ $ python test.py
 $ python test_orb.py
 ```
 ### Result
+
+|Method|Mean Average Corner Error (pixels)|
+|---|---|
+|HomographyNet|4.26|
+|SURF + RANSAC|8.83|
+|Identity Homography|32.13|
+
+### Graph
 ![image](https://gitee.com/foamliu/HomographyNet/raw/master/images/result.jpg)
