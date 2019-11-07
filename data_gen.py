@@ -9,6 +9,7 @@ from config import im_size
 class DeepHNDataset(Dataset):
     def __init__(self, split):
         filename = 'data/{}.pkl'.format(split)
+        print('loading {}...'.format(filename))
         with open(filename, 'rb') as file:
             samples = pickle.load(file)
         np.random.shuffle(samples)
