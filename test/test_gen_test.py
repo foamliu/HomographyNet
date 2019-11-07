@@ -27,8 +27,9 @@ if __name__ == "__main__":
     print('perturbed_four_points: ' + str(perturbed_four_points))
 
     H = cv.getPerspectiveTransform(np.float32(four_points), np.float32(perturbed_four_points))
-    print(H)
+    print('H: ' + str(H))
     H_inverse = inv(H)
+    print('H_inverse: ' + str(H_inverse))
 
     warped_image = cv.warpPerspective(img, H_inverse, (640, 480))
     # warped_image = cv.warpPerspective(img, H, (640, 480))
@@ -36,8 +37,8 @@ if __name__ == "__main__":
     Ip1 = test_image[top_point[1]:bottom_point[1], top_point[0]:bottom_point[0]]
     Ip2 = warped_image[top_point[1]:bottom_point[1], top_point[0]:bottom_point[0]]
 
-    warped_image = cv.polylines(warped_image, [np.int32(four_points)], True, 255, 3, cv.LINE_AA)
     test_image = cv.polylines(test_image, [np.int32(perturbed_four_points)], True, 255, 3, cv.LINE_AA)
+    warped_image = cv.polylines(warped_image, [np.int32(four_points)], True, 255, 3, cv.LINE_AA)
 
     Ip1_new = np.zeros((320, 320), np.uint8)
     Ip1_new[64:, 64:] = Ip1
@@ -49,7 +50,7 @@ if __name__ == "__main__":
     print(pred_H)
     error = np.reshape(H - pred_H, (9,))
     print(error)
-    print(np.square(error).mean())
+    print(np.abs(error).mean())
 
     # pred_four_pints = cv.perspectiveTransform(np.array(four_points), pred_H)
     Ip3 = cv.warpPerspective(Ip1, pred_H, (256, 256))

@@ -26,7 +26,7 @@ if __name__ == '__main__':
     num_samples = len(test_dataset)
 
     # Loss function
-    criterion = nn.MSELoss().to(device)
+    criterion = nn.L1Loss().to(device)
     losses = AverageMeter()
     elapsed = 0
 
