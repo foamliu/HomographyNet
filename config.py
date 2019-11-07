@@ -6,7 +6,9 @@ im_size = 128
 batch_size = 64
 
 num_samples = 118287
-
+num_train = 500000
+num_valid = 41435
+num_test = 10000
 image_folder = 'data/train2017'
 train_file = 'data/train.pkl'
 valid_file = 'data/valid.pkl'
