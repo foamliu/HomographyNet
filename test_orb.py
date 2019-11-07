@@ -46,16 +46,16 @@ def compute_homo(img1, img2):
 
 def compute_mace(H, perturbed_four_points):
     four_points = np.float32([[64, 64], [64, 320], [320, 320], [320, 64]])
-    print('four_points: ' + str(four_points))
-    print('perturbed_four_points: ' + str(perturbed_four_points))
+    # print('four_points: ' + str(four_points))
+    # print('perturbed_four_points: ' + str(perturbed_four_points))
     print(four_points.shape)
     # print(H)
     pred_four_pints = cv2.perspectiveTransform(np.array([four_points]), H)
-    print('predicted_four_pints: ' + str(pred_four_pints))
+    # print('predicted_four_pints: ' + str(pred_four_pints))
     print(pred_four_pints.shape)
     # print('predicted_four_pints.shape: ' + str(predicted_four_pints.shape))
     error = np.subtract(pred_four_pints, perturbed_four_points)
-    print('error: ' + str(error))
+    # print('error: ' + str(error))
     mace = (np.abs(error)).mean()
     return mace
 
