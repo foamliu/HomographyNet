@@ -60,7 +60,7 @@ def compute_mse(H, four_points, perturbed_four_points):
     # print('error: ' + str(error))
     # print('H_four_points: ' + str(H_four_points))
     H_four_points = np.subtract(perturbed_four_points, four_points)
-    mse = (np.square(diff - H_four_points)).mean()
+    mse = (np.abs(diff - H_four_points)).mean()
     return mse
 
 
