@@ -44,7 +44,7 @@ def compute_homo(img1, img2):
     return np.identity(3)
 
 
-def compute_mse(H, perturbed_four_points):
+def compute_mace(H, perturbed_four_points):
     four_points = np.float32([[64, 64], [64, 320], [320, 320], [320, 64]])
     print('four_points: ' + str(four_points))
     print('perturbed_four_points: ' + str(perturbed_four_points))
@@ -65,8 +65,8 @@ def test():
     with open(filename, 'rb') as file:
         samples = pickle.load(file)
 
-    mse_list = []
-    mses = AverageMeter()
+        mace_list = []
+        maces = AverageMeter()
     for i, sample in enumerate(samples):
         image, four_points, perturbed_four_points = sample
         img1 = np.zeros((640, 480), np.uint8)
@@ -76,17 +76,16 @@ def test():
 
         H = compute_homo(img2, img1)
         try:
-            mse = compute_mse(H, perturbed_four_points)
-            mse_list.append(mse)
-            mses.update(mse)
+            mace = compute_mace(H, perturbed_four_points)
+            mace_list.append(mace)
+            maces.update(mace)
         except cv2.error as err:
             print(err)
         if i % print_freq == 0:
             print('[{0}/{1}]\tMSE {mse.val:.5f} ({mse.avg:.5f})'.format(i, len(samples), mse=mses))
-        break
 
-    print('MSE: {:5f}'.format(np.mean(mse_list)))
-    print('len(mse_list): ' + str(len(mse_list)))
+    print('MSE: {:5f}'.format(np.mean(mace_list)))
+    print('len(mse_list): ' + str(len(mace_list)))
 
 
 if __name__ == "__main__":
