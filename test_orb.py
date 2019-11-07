@@ -65,8 +65,8 @@ def test():
     with open(filename, 'rb') as file:
         samples = pickle.load(file)
 
-        mace_list = []
-        maces = AverageMeter()
+    mace_list = []
+    maces = AverageMeter()
     for i, sample in enumerate(samples):
         image, four_points, perturbed_four_points = sample
         img1 = np.zeros((640, 480), np.uint8)
@@ -82,7 +82,7 @@ def test():
         except cv2.error as err:
             print(err)
         if i % print_freq == 0:
-            print('[{0}/{1}]\tMSE {mse.val:.5f} ({mse.avg:.5f})'.format(i, len(samples), mse=mses))
+            print('[{0}/{1}]\tMean Average Corner Error {mace.val:.5f} ({mace.avg:.5f})'.format(i, len(samples), mace=maces))
 
     print('MSE: {:5f}'.format(np.mean(mace_list)))
     print('len(mse_list): ' + str(len(mace_list)))
