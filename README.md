@@ -48,7 +48,7 @@ $ python test_orb.py
 
 |Method|Mean Average Corner Error (pixels)|
 |---|---|
-|HomographyNet|4.26|
+|HomographyNet|3.53|
 |SURF + RANSAC|8.83|
 |Identity Homography|32.13|
 
