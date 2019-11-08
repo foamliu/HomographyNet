@@ -42,7 +42,8 @@ $ tensorboard --logdir runs
 Homography Estimation Comparison on Warped MS-COCO 14 Test Set.
 ```bash
 $ python test.py
-$ python test_orb.py
+$ python3 test_orb.py --type surf
+$ python3 test_orb.py --type identity
 ```
 ### Result
 
