@@ -24,13 +24,13 @@ Deep Image Homography Estimation [paper](https://arxiv.org/abs/1606.03798) imple
 ### Data Pre-processing
 Extract training images:
 ```bash
-$ python extract.py
-$ python pre_process.py
+$ python3 extract.py
+$ python3 pre_process.py
 ```
 
 ### Train
 ```bash
-$ python train.py --lr 0.005 --batch-size 64
+$ python3 train.py --lr 0.005 --batch-size 64
 ```
 
 If you want to visualize during training, run in your terminal:
@@ -41,12 +41,11 @@ $ tensorboard --logdir runs
 ## Test
 Homography Estimation Comparison on Warped MS-COCO 14 Test Set.
 ```bash
-$ python test.py
+$ python3 test.py
 $ python3 test_orb.py --type surf
 $ python3 test_orb.py --type identity
 ```
 ### Result
-
 |Method|Mean Average Corner Error (pixels)|
 |---|---|
 |HomographyNet|3.53|
